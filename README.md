@@ -43,28 +43,6 @@ parser.add_argument('--split_by_file', action='store_true', help="define how to 
 
 arg = parser.parse_args()
 
-def train_test_val_split_random(img_paths,ratio_train=0.8,ratio_test=0.1,ratio_val=0.1):
-    assert int(ratio_train+ratio_test+ratio_val) == 1
-    train_img, middle_img = train_test_split(img_paths,test_size=1-ratio_train, random_state=233)
-    ratio=ratio_val/(1-ratio_train)
-    val_img, test_img  =train_test_split(middle_img,test_size=ratio, random_state=233)
-    print("NUMS of train:val:test = {}:{}:{}".format(len(train_img), len(val_img), len(test_img)))
-    return train_img, val_img, test_img
-
-def train_test_val_split_by_files(img_paths, root_dir):
-    phases = ['train', 'val', 'test']
-    img_split = []
-    for p in phases:
-        define_path = os.path.join(root_dir, f'{p}.txt')
-        print(f'Read {p} dataset definition from {define_path}')
-        assert os.path.exists(define_path)
-        with open(define_path, 'r') as f:
-            img_paths = f.readlines()
-            # img_paths = [os.path.split(img_path.strip())[1] for img_path in img_paths]  # NOTE 取消这句备注可以读取绝对地址。
-            img_split.append(img_paths)
-    return img_split[0], img_split[1], img_split[2]
-
-
 def yolo2coco(arg):
     root_path = arg.root_dir
     print("Loading data from ",root_path)
